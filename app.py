@@ -12,7 +12,7 @@ demo = gr.Interface(
     fn=analyze_text,
     inputs=gr.Textbox(lines=10, placeholder="Enter intelligence-style passage..."),
     outputs="json",
-    title="Sigma: Intelligence Reasoning Prototype",
+    title="Intelligence Reasoning Prototype",
     description="Extracts explicit facts, validates implicit inferences, and generates summary using pretrained NLP models."
 )
 

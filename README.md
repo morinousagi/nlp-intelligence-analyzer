@@ -1,12 +1,21 @@
+---
+title: Structured Intelligence & Grounded Meaning Analyzer
+emoji: 👀
+colorFrom: yellow
+colorTo: gray
+sdk: gradio
+app_file: app.py
+pinned: false
+---
+
 # Structured Intelligence & Grounded Meaning Analyzer
 
-**WIP**
-
+This project was developed using prompt engineering techniques with ChatGPT GPT-5.5.
 
 ## Live Demo
 
 Try the interactive SIGMA reasoning tool here:
-[Hugging Face Space Link]
+[Hugging Face Space Link](https://huggingface.co/spaces/morinousagi/nlp-intelligence-analyzer)
 
 ## Model Stack
 
@@ -14,7 +23,7 @@ Try the interactive SIGMA reasoning tool here:
 
 - `facebook/bart-large-cnn` (summarization)
 
-- `spaCy en_core_web_trf` (entity extraction) - Extraction uses syntactic dependency parsing to avoid speculative relation generation and maintain analytic defensibility.
+- `spaCy en_core_web_sm` (entity extraction) - extraction uses syntactic dependency parsing to avoid speculative relation generation and maintain analytic defensibility.
 
 ## Architecture
 ```
@@ -32,7 +41,7 @@ Validated Implicit Inferences
    ↓
 Intelligence Brief Output
 ```
-### Architecture of Inference Layer
+#### Architecture of Inference Layer
 ```
 Structured Facts
        ↓
