@@ -44,7 +44,7 @@ demo = gr.Interface(
     inputs=gr.Textbox(
         lines=12,
         label="Intelligence Report Input",
-        placeholder="Paste intelligence-style narrative text here..."
+        placeholder="Paste intelligence-style narrative text here -> click Submit and wait for results to appear..."
     ),
 
     outputs=gr.Markdown(),
