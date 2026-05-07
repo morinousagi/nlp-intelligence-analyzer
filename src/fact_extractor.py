@@ -66,44 +66,73 @@ class FactExtractor:
             - Identify ROOT verb of each sentence
             - Extract:
                 - Subject (nsubj / nsubjpass)
-                - Object (dobj / attr / prep / ccomp)
+                - Object/complement structures
             - Expand subject and object to full phrase spans
-        Returns:
-            List[Dict] with:
-                {
-                    "sentence": original sentence,
-                    "subject": full subject phrase,
-                    "action": lemmatized root verb,
-                    "object": full object phrase
-                }
+        Returns: List[Dict]
         """
 
         doc = self.nlp(text)
+
         facts = []
 
         for sent in doc.sents:
+
             for token in sent:
 
                 # Identify main predicate (ROOT verb)
+                # note: some sentences whose ROOT is AUX or NOUN may still not extract perfectly
                 if token.pos_ == "VERB" and token.dep_ == "ROOT":
 
                     subject = None
                     obj = None
 
-                    # Search for grammatical subject
+                    # -----------------------------
+                    # SUBJECT EXTRACTION
+                    # -----------------------------
                     for child in token.children:
+
                         if child.dep_ in ("nsubj", "nsubjpass"):
                             subject = self._expand_phrase(child)
 
-                    # Search for object or complement
+                    # -----------------------------
+                    # OBJECT / COMPLEMENT EXTRACTION
+                    # -----------------------------
                     for child in token.children:
-                        if child.dep_ in ("dobj", "attr", "prep", "ccomp"):
+
+                        # Direct object / attribute / object predicate
+                        if child.dep_ in ("dobj", "attr", "oprd"):
+
                             obj = self._expand_phrase(child)
 
+                            # Attach associated prepositional phrases
+                            prep_phrases = []
+
+                            for subchild in child.children:
+
+                                if subchild.dep_ == "prep":
+                                    prep_phrases.append(
+                                        self._expand_phrase(subchild)
+                                    )
+
+                            if prep_phrases:
+                                obj += " " + " ".join(prep_phrases)
+
+                        # Clausal complements
+                        elif child.dep_ in ("ccomp", "xcomp"):
+
+                            obj = self._expand_phrase(child)
+
+                            # Remove leading complementizer
+                            if obj.startswith("that "):
+                                obj = obj[5:]
+
+                    # -----------------------------
+                    # STORE FACT
+                    # -----------------------------
                     facts.append({
                         "sentence": sent.text.strip(),
                         "subject": subject,
-                        "action": token.lemma_,  # Use lemma for normalized verb
+                        "action": token.lemma_,
                         "object": obj
                     })
 
