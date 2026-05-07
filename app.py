@@ -38,26 +38,29 @@ def analyze_text(text):
     return "\n".join(formatted_output)
 
 
-demo = gr.Interface(
-    fn=analyze_text,
+with gr.Blocks() as demo:
 
-    inputs=gr.Textbox(
+    gr.Markdown("# SIGMA: Structured Intelligence & Grounded Meaning Analyzer")
+    gr.Markdown(
+        "Extract explicit facts, evaluate implicit inferences, "
+        "and generate intelligence-style summaries."
+    )
+
+    input_text = gr.Textbox(
         lines=12,
         label="Intelligence Report Input",
         placeholder="Paste intelligence-style narrative text here..."
-    ),
-
-    outputs=gr.Markdown(),
-
-    title="SIGMA: Structured Intelligence & Grounded Meaning Analyzer",
-
-    description=(
-        "SIGMA extracts explicit facts, evaluates implicit inferences "
-        "using Natural Language Inference (MNLI), and generates "
-        "concise intelligence-style summaries using pretrained NLP models."
     )
-)
 
+    submit_btn = gr.Button("Analyze")
+
+    output_text = gr.Markdown()
+
+    submit_btn.click(
+        fn=analyze_text,
+        inputs=input_text,
+        outputs=output_text
+    )
 
 if __name__ == "__main__":
     demo.launch()
