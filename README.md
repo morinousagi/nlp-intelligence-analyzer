@@ -28,15 +28,13 @@ Try the interactive SIGMA reasoning tool here:
 
 
 ### Inference Validation 
-- `roberta-large-mnli`
-- Inference classifications:
+- `roberta-large-mnli` (Multi-Genre Natural Language Inference)
+- Transformer model to evaluate candidate hypotheses against the original passage, classifying each hypothesis as:
    - ENTAILMENT
    - NEUTRAL
    - CONTRADICTION
-- Allows the system to distinguish:
-   - Confirmed events
-   - Analyst assessments
-   - Unsupported claims
+
+- Confidence scores are derived from the model's softmax probability distribution over the three inference classes.
 
 ### Summarization
 - `facebook/bart-large-cnn`

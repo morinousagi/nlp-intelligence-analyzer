@@ -135,13 +135,25 @@ class FactExtractor:
                         if prep_phrases:
                             obj += " " + " ".join(prep_phrases)
 
+
+                    # Detect negation
+                    negated = any(
+                        child.dep_ == "neg"
+                        for child in token.children
+                    )
+
+                    action = token.lemma_
+
+                    if negated:
+                        action = f"not {action}"
+
                     # -----------------------------
                     # STORE FACT
                     # -----------------------------
                     facts.append({
                         "sentence": sent.text.strip(),
                         "subject": subject,
-                        "action": token.lemma_,
+                        "action": action,
                         "object": obj
                     })
 
