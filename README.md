@@ -59,13 +59,14 @@ Implicit Inference Output
 ## Files
 ```
 /
-├── src/
+├── src/                     # Core NLP logic
+│   ├── __init__.py
 │   ├── fact_extractor.py
 │   ├── inference_engine.py
 │   ├── summarizer.py
 │   ├── pipeline.py
 │
-├── app.py
+├── app.py                   # UI / deployment entrypoint
 ├── requirements.txt
 └── README.md
 ```
