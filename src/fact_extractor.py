@@ -35,10 +35,10 @@ class FactExtractor:
         #self.nlp = spacy.load("en_core_web_sm")   # lightweight version
 
         try:
-            nlp = spacy.load("en_core_web_sm")
+            self.nlp = spacy.load("en_core_web_sm")
         except:
             download("en_core_web_sm")
-            nlp = spacy.load("en_core_web_sm")
+            self.nlp = spacy.load("en_core_web_sm")
         
 
     def extract_entities(self, text):

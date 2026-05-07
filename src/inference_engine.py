@@ -28,10 +28,17 @@ class InferenceEngine:
     def validate_hypotheses(self, premise, hypotheses):
         """
         Validate candidate hypotheses using MNLI.
-        Only keep entailments above confidence threshold.
+        Returns:
+            List of inference classifications.
         """
 
         validated = []
+
+        label_mapping = {
+            "LABEL_0": "CONTRADICTION",
+            "LABEL_1": "NEUTRAL",
+            "LABEL_2": "ENTAILMENT"
+        }
 
         for hypothesis in hypotheses:
 
@@ -39,14 +46,29 @@ class InferenceEngine:
                 f"{premise} </s></s> {hypothesis}"
             )[0]
 
-            label = result["label"]
+            raw_label = result["label"]
             score = result["score"]
 
-            # Some versions return LABEL_2 etc.
-            if label.upper() in ["ENTAILMENT", "LABEL_2"] and score >= self.threshold:
-                validated.append({
-                    "hypothesis": hypothesis,
-                    "confidence": round(score, 3)
-                })
+            label = label_mapping.get(raw_label, raw_label)
+
+            validated.append({
+                "hypothesis": hypothesis,
+                "label": label,
+                "confidence": round(score, 3),
+                "confidence_tier": self._confidence_tier(score)
+            })
 
         return validated
+    
+    def _confidence_tier(self, score):
+        """
+        Convert numeric confidence into analyst-friendly tier.
+        """
+
+        if score >= 0.95:
+            return "High"
+
+        elif score >= 0.80:
+            return "Moderate"
+
+        return "Low"

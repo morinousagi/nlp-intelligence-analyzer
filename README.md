@@ -12,18 +12,44 @@ pinned: false
 
 This project was developed using prompt engineering techniques with ChatGPT GPT-5.5.
 
-## Live Demo
+The application is deployed using Hugging Face Spaces.
 
 Try the interactive SIGMA reasoning tool here:
 [Hugging Face Space Link](https://huggingface.co/spaces/morinousagi/nlp-intelligence-analyzer)
 
+---
+
 ## Model Stack
 
-- `roberta-large-mnli` (entailment detection)
+### Fact Extraction 
+- `spaCy en_core_web_sm`
+- Explicit fact extraction, extracts structured factual triples:
+`Subject → Action → Object`
 
-- `facebook/bart-large-cnn` (summarization)
 
-- `spaCy en_core_web_sm` (entity extraction) - extraction uses syntactic dependency parsing to avoid speculative relation generation and maintain analytic defensibility.
+### Inference Validation 
+- `roberta-large-mnli`
+- Inference classifications:
+   - ENTAILMENT
+   - NEUTRAL
+   - CONTRADICTION
+- Allows the system to distinguish:
+   - Confirmed events
+   - Analyst assessments
+   - Unsupported claims
+
+### Summarization
+- `facebook/bart-large-cnn`
+- Generates concise analytic summaries
+
+
+### Technical Notes
+- Uses conservative syntactic extraction to avoid speculative relation generation
+- Separates confirmed facts from analytical assessments
+- Built entirely with pretrained transformer models
+- Optimized for CPU deployment on Hugging Face Spaces
+
+---
 
 ## Architecture
 ```
@@ -41,7 +67,7 @@ Validated Implicit Inferences
    ↓
 Intelligence Brief Output
 ```
-#### Architecture of Inference Layer
+### Architecture of Inference Layer
 ```
 Structured Facts
        ↓
@@ -56,7 +82,9 @@ Filter (confidence threshold)
 Implicit Inference Output
 ```
 
-## Files
+---
+
+## Project Structure
 ```
 /
 ├── src/                     # Core NLP logic
