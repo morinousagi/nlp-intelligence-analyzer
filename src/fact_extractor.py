@@ -97,25 +97,13 @@ class FactExtractor:
                     # -----------------------------
                     # OBJECT / COMPLEMENT EXTRACTION
                     # -----------------------------
+
                     for child in token.children:
 
                         # Direct object / attribute / object predicate
                         if child.dep_ in ("dobj", "attr", "oprd"):
 
                             obj = self._expand_phrase(child)
-
-                            # Attach associated prepositional phrases
-                            prep_phrases = []
-
-                            for subchild in child.children:
-
-                                if subchild.dep_ == "prep":
-                                    prep_phrases.append(
-                                        self._expand_phrase(subchild)
-                                    )
-
-                            if prep_phrases:
-                                obj += " " + " ".join(prep_phrases)
 
                         # Clausal complements
                         elif child.dep_ in ("ccomp", "xcomp"):
@@ -125,6 +113,27 @@ class FactExtractor:
                             # Remove leading complementizer
                             if obj.startswith("that "):
                                 obj = obj[5:]
+
+                    # -----------------------------------
+                    # Attach ROOT-level prep phrases
+                    # -----------------------------------
+
+                    if obj:
+
+                        prep_phrases = []
+
+                        for child in token.children:
+
+                            if child.dep_ == "prep":
+
+                                prep_text = self._expand_phrase(child)
+
+                                # Avoid duplicate attachment
+                                if prep_text not in obj:
+                                    prep_phrases.append(prep_text)
+
+                        if prep_phrases:
+                            obj += " " + " ".join(prep_phrases)
 
                     # -----------------------------
                     # STORE FACT
